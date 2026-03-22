@@ -1,7 +1,5 @@
-"""
-    This file contains the existing GPT defination file 
-        acquired by nanoGPT and discrete diffusion
-        to run their respective models.
+""" Char Diffusion Model fine-tuning on this task
+    Code Reference: https://colab.research.google.com/github/ash80/diffusion-gpt/blob/master/The_Annotated_Discrete_Diffusion_Models.ipynb 
 """
 
 import torch
@@ -10,14 +8,15 @@ import math
 from torch.nn import functional as F
 
 from typing import Optional
+from dataclasses import dataclass
 
 class Classifier(nn.Module):
 
     def __init__(self, num_labels):
         super().__init__()
 
+        # loading trained char discrete diffusion
         self.model_path = "discrete_diffusion/best_model.pth"
-
         checkpoint = torch.load(self.model_path, map_location="cpu")
 
         if "state_dict" in checkpoint:
@@ -37,8 +36,8 @@ class Classifier(nn.Module):
             self.gpt = GPT(config)
             self.gpt.load_state_dict(checkpoint["state_dict"], strict=False)
 
+            # loading important hyperparameter
             self.sigma_map = TimestepEmbedder(config.cond_dim)
-
             hidden_size = self.gpt.config.n_embd
 
         else:
@@ -57,26 +56,23 @@ class Classifier(nn.Module):
             
             self.gpt = GPT(config)
             self.gpt.load_state_dict(checkpoint, strict=False)
-            self.sigma_map = TimestepEmbedder(config.cond_dim)
 
+            # loading hyper params
+            self.sigma_map = TimestepEmbedder(config.cond_dim)
             hidden_size = self.gpt.config.n_embd
 
-        # freeze backbone
+        # unfreeze backbone
         for param in self.gpt.parameters():
-            param.requires_grad = False
-
-        # unfreeze last transformer block
-        for param in self.gpt.transformer.h[-1].parameters():
             param.requires_grad = True
 
-        ## unfreezing all
-        # for param in self.gpt.parameters():
-        #     param.requires_grad = True
-
-
+        # MLP declartion
         self.classifier = nn.Linear(hidden_size, num_labels)
 
     def forward(self, input_ids, sigma, attention_mask=None, labels=None):
+
+        """
+            Forward function Strcture of Diffusion Model to align to this task
+        """
 
         sigma = sigma.reshape(-1)
         tok_emb = self.gpt.transformer.wte(input_ids)
@@ -114,8 +110,7 @@ def bias_add_scale(
         out = residual + out
     return out
 
-from dataclasses import dataclass
-
+""" Aligning parameters to nanoGPT """
 @dataclass
 class GPTConfig:
     block_size: int = 64
@@ -144,7 +139,7 @@ class MLP(nn.Module):
         x = self.dropout(x)
         return x
 
-
+"""Codes from this region are from: https://colab.research.google.com/github/ash80/diffusion-gpt/blob/master/The_Annotated_Discrete_Diffusion_Models.ipynb"""
 class SelfAttention(nn.Module):
 
     def __init__(self, config):

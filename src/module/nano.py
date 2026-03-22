@@ -1,11 +1,4 @@
-"""
-Full definition of a GPT Language Model, all of it in this single file.
-References:
-1) the official GPT-2 TensorFlow implementation released by OpenAI:
-https://github.com/openai/gpt-2/blob/master/src/model.py
-2) huggingface/transformers PyTorch implementation:
-https://github.com/huggingface/transformers/blob/main/src/transformers/models/gpt2/modeling_gpt2.py
-"""
+""" nanoGPT code from the repo https://github.com/karpathy/nanoGPT """
 
 import math
 import inspect
@@ -16,34 +9,36 @@ import torch.nn as nn
 from torch.nn import functional as F
 
 class Classifier(nn.Module):
+    """
+            MLP Architecture for this task
+    """ 
 
     def __init__(self, num_labels):
         super().__init__()
 
+        # loading trained nanoGPT
         self.model_path = "../nanoGPT_CoLi/out-reddit-clean/ckpt.pt"
-
         checkpoint = torch.load(self.model_path, map_location="cpu")
 
+        # loading models configuration
         model_args = checkpoint["model_args"]
-
         config = GPTConfig(**model_args)
         self.gpt = GPT(config)
-
         self.gpt.load_state_dict(checkpoint["model"])
-
         hidden_size = model_args["n_embd"]
 
-        # freeze backbone
+        # unfreeze backbone
         for param in self.gpt.parameters():
             param.requires_grad = True
 
-        # unfreeze last transformer block
-        for param in self.gpt.transformer.h[-1].parameters():
-            param.requires_grad = True
-
+        # MLP declartion
         self.classifier = nn.Linear(hidden_size, num_labels)
 
     def forward(self, input_ids, attention_mask=None, labels=None):
+
+        """
+            Forward function Strcture
+        """
 
         tok_emb = self.gpt.transformer.wte(input_ids)
 
@@ -63,7 +58,9 @@ class Classifier(nn.Module):
 
         return logits
 
-
+"""
+    Codes from here are from https://github.com/karpathy/nanoGPT
+"""
 class LayerNorm(nn.Module):
     """ LayerNorm but with an optional bias. PyTorch doesn't support simply bias=False """
 

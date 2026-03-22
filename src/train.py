@@ -1,15 +1,18 @@
+""" Training Structure Defination"""
+
 import torch
 import torch.nn as nn
 import math
 
-RANDOM_SEED = 42
-torch.manual_seed(RANDOM_SEED)
-
 from transformers import get_linear_schedule_with_warmup
 from sklearn.metrics import accuracy_score, recall_score, precision_score, f1_score
 
-# Focal loss function for handling class imbalance
+RANDOM_SEED = 42
+torch.manual_seed(RANDOM_SEED)
+
 class FocalLoss(torch.nn.Module):
+    """ Focal Loss function For Class Imbalance Handling: https://arxiv.org/abs/1708.02002"""
+
     def __init__(self, alpha=1, gamma=2, reduction='mean'):
         super(FocalLoss, self).__init__()
         self.alpha = alpha
@@ -38,31 +41,36 @@ class Train:
 
         total_steps = len(train_loader) * self.epoch
 
+        # hardcoding hyper-parameters
         self.optimizer = torch.optim.AdamW(
             filter(lambda p: p.requires_grad, model.parameters()),
             lr=2e-5,
             weight_decay=0.3
         )
 
-
         self.total_steps = len(train_loader) * epoch
         self.scheduler = get_linear_schedule_with_warmup(self.optimizer, num_warmup_steps=0, num_training_steps=total_steps)
 
         self.model.to(self.device)
 
-        ## loss defining
+        ## Focal Loss initilialization
         self.loss_fn = FocalLoss(alpha=1.0, gamma=2.0).to(self.device)    
     
 
     def sample_sigma(self, batch_size, sigma_min=1e-4, sigma_max=20.0, device="cuda"):
+        """
+            Noise initiliazation to determine character impaninting
+        """
         return torch.exp(
             torch.rand(batch_size, device=device) *
             (math.log(sigma_max) - math.log(sigma_min)) +
             math.log(sigma_min)
         ) 
 
-    
     def train( self ):
+        """
+            Training function
+        """
         best_val_loss = 1000.
         no_improvement_epochs = 0
         early_stop_tolerance = 2
@@ -78,8 +86,8 @@ class Train:
 
                     batch_size = input_ids.size(0)
 
-                    ## definating noise sample
-                    sigma = self.sample_sigma( batch_size, device=self.device)  # adjust range if needed
+                    ## initializing noise sample
+                    sigma = self.sample_sigma( batch_size, device=self.device)
                     logits = self.model(input_ids, sigma, attention_mask=attention_mask, labels=labels)
 
                 else:
@@ -105,6 +113,7 @@ class Train:
                     break            
     
     def val( self ):
+        """ Defining Validation Structure"""
         self.model.eval()
         all_preds, all_labels = [], []
         total_loss = 0
@@ -115,7 +124,7 @@ class Train:
                 if( self.model_type == "dlm" ):
 
                     batch_size = input_ids.size(0)
-                    sigma = self.sample_sigma( batch_size, device=self.device)  # adjust range if needed
+                    sigma = self.sample_sigma( batch_size, device=self.device)  
                     logits = self.model(input_ids, sigma, attention_mask=attention_mask, labels=labels)
 
                 else:
@@ -127,6 +136,7 @@ class Train:
                 loss = self.loss_fn(logits, labels)
                 total_loss += loss.item()
 
+        # saving metric
         accuracy = accuracy_score(all_labels, all_preds)
         recall = recall_score(all_labels, all_preds, average='macro')
         precision = precision_score(all_labels, all_preds, average='macro')
@@ -136,6 +146,9 @@ class Train:
         return accuracy, precision, f1, total_loss / len(self.val_loader)
 
 def train( train_loader, val_loader, model, lr, epoch, model_type, device ):
+    """ 
+        Factory method of Training  
+    """
 
     train = Train( train_loader, val_loader, model, lr, epoch, model_type, device )
     train.train()

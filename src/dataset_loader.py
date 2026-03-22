@@ -1,3 +1,5 @@
+""" Preparing Task Dataset for Experiment """
+
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder
 import pickle
@@ -9,16 +11,19 @@ import torch
 
 
 class Dataset:
-    """
-        Using HuggingFace to download the dataset
-    """
 
     def loader( self, file_path ):
+        """
+            Loads tsv file
+        """
 
         data = pd.read_csv(file_path, sep='\t')
         return data.iloc[:, 0], data.iloc[:, 1]
     
     def label_transform( self, y_train, y_val, y_test ):
+        """
+            Converts Oridinal Labels to Numeric
+        """
 
         label_encoder = LabelEncoder()
         y_train = label_encoder.fit_transform(y_train)
@@ -30,7 +35,7 @@ class Dataset:
 
     def load_dataset(self, train_file_path, val_file_path, test_file_path):
         """
-            This function loads the dataset
+            Factory Method
         """
 
         self.X_train, y_train = self.loader( train_file_path )
@@ -41,6 +46,11 @@ class Dataset:
         
 
 class CharTokenizer:
+    """
+        Character Tokenization for Diffusion Model
+        Utilizes .pt model
+    """
+
     def __init__(self, vocab, pad_token_id=0):
         self.stoi = vocab["stoi"]
         self.pad_token_id = pad_token_id
@@ -64,10 +74,11 @@ class CharTokenizer:
 
 
 class Tokenization:
+    """
+        Tokenizes input for the experiment
+    """
     
     def __init__(self, train_file_path, val_file_path, test_file_path, batch_size, max_length):
-        
-        # self.tokenizer = AutoTokenizer.from_pretrained( model_name, trust_remote_code=True )
 
         meta = self.load_pkl( "misc/meta.pkl" )
         self.tokenizer = CharTokenizer(vocab = meta) 
@@ -80,11 +91,17 @@ class Tokenization:
     
 
     def load_pkl(self, dir):
+        """
+            Loads pickle file
+        """
         with open(dir, 'rb') as f:
             meta = pickle.load(f)
         return meta
     
     def tokenize_inputs(self, texts):
+        """
+            Tokenizes Input
+        """
 
         encodings = [self.tokenizer(t, padding=True, truncation=True, max_length=self.max_length) for t in texts]
 
@@ -97,6 +114,9 @@ class Tokenization:
         }
 
     def encode( self, X, y ):
+        """
+            Factory Method for Input Tokenization
+        """
         return self.tokenize_inputs(X.tolist()), torch.tensor(y)
     
     def tensor_conversion( self, X_encoding, y_encoding ):
@@ -107,21 +127,26 @@ class Tokenization:
 
     
     def process_dataset( self ):
+        """
+            Factory Method for Tokenization
+        """
 
+        # Loads Dataset
         dataset = Dataset()
-
         dataset.load_dataset( train_file_path=self.train_file_path, val_file_path=self.val_file_path, test_file_path=self.test_file_path )
-
         print( "[Done] Dataset Loaded!" )
 
+        # Tokenizes Texts and Labels
         train_encodings, y_train_tensor = self.encode( dataset.X_train, dataset.y_train )
         val_encodings, y_dev_tensor = self.encode( dataset.X_val, dataset.y_val )
         test_encodings, y_test_tensor = self.encode( dataset.X_test, dataset.y_test )
 
+        # Converts to Tensor
         train_dataset = self.tensor_conversion( train_encodings, y_train_tensor )
         val_dataset = self.tensor_conversion( val_encodings, y_dev_tensor )
         test_dataset = self.tensor_conversion( test_encodings, y_test_tensor )
 
+        # Aligns to Pytorch Dataloader Requirement
         train_loader = self.convert_to_dataloader(train_dataset)
         dev_loader = self.convert_to_dataloader(val_dataset)
         test_loader = self.convert_to_dataloader(test_dataset)
@@ -130,6 +155,9 @@ class Tokenization:
         
                 
 def dataset_loader( dataset_path, test_path, batch_size, max_length ):
+    """
+        Root Method for Dataset Preparation and Tokenization
+    """
 
     train_path = dataset_path + "train.tsv"
     val_path = dataset_path + "val.tsv"

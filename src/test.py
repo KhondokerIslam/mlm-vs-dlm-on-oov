@@ -1,3 +1,5 @@
+""" Test Structure Defining File """
+
 import pandas as pd
 import math
 
@@ -10,6 +12,9 @@ def loader( file_path ):
     return data
 
 def save_fr_analysis( all_labels, all_preds, test_set_path, output_file ):
+    """
+        Saving Results in Structured manner for analysis
+    """
     
     test_data = loader( file_path = test_set_path )
 

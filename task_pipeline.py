@@ -1,3 +1,6 @@
+""" Root file to run the experiment """
+
+
 from src.dataset_loader import dataset_loader
 from src.train import train
 from src.test import test
@@ -59,33 +62,23 @@ def parse_arguments():
 def main():
     args = parse_arguments()
 
+    # Utilizing CLI to create new files
     args.test_set_path = f"dataset/test/{args.test_set_type}.tsv"
-
     args.output_file = f"outputs/{args.model_type}/{args.test_set_type}_result.tsv"
 
+    # Dataloader and Tokenization
     train_loader, val_loader, test_loader = dataset_loader( args.dataset_path, args.test_set_path, args.batch_size, max_length = 64 )
 
+    # Device mapping
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    print( f"[Notification] Detected Device: {device}" )
 
-    if( args.model_type == "mlm" ):
-        # device = "cpu"
-
-        print( f"[Notification] Detected Device: {device}" )
-
-        model = nano.Classifier( num_labels = 2 )
-
-        print( "[Done] Model Defined!" )
-
-    else:
-
-        print( f"[Notification] Detected Device: {device}" )
-
-        model = discrete.Classifier( num_labels = 2 )
-
-        print( "[Done] Model Defined!" )
+    # Defining Model
+    model = nano.Classifier( num_labels = 2 ) if args.model_type == "mlm" else discrete.Classifier( num_labels = 2 )
+    print( "[Done] Model Defined!" )
     
+    # Model Train & Test
     model = train( train_loader, val_loader, model, args.lr, args.epoch, args.model_type, device )
-
     test( test_loader, args.test_set_path, model, args.output_file, args.model_type, device )
 
 
