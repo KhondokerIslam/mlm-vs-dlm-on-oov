@@ -16,7 +16,7 @@ class Classifier(nn.Module):
     def __init__(self, num_labels):
         super().__init__()
 
-        # loading trained nanoGPT
+        # loading trained base nanoGPT
         self.model_path = "../nanoGPT_CoLi/out-reddit-clean/ckpt.pt"
         checkpoint = torch.load(self.model_path, map_location="cpu")
 

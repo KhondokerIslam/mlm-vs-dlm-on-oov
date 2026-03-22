@@ -15,7 +15,7 @@ class Classifier(nn.Module):
     def __init__(self, num_labels):
         super().__init__()
 
-        # loading trained char discrete diffusion
+        # loading base trained char discrete diffusion
         self.model_path = "discrete_diffusion/best_model.pth"
         checkpoint = torch.load(self.model_path, map_location="cpu")
 
