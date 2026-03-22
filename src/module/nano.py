@@ -1,4 +1,6 @@
-""" nanoGPT code from the repo https://github.com/karpathy/nanoGPT """
+""" Char Diffusion Model fine-tuning on this task
+    Code Reference: https://github.com/karpathy/nanoGPT 
+"""
 
 import math
 import inspect
