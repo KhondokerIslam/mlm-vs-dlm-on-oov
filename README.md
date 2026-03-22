@@ -1,6 +1,6 @@
 This repository contains the codes required to rerun the experiment "Tackling OOV: Masked Language Models vs Character Diffusion"
 
-# Working Directory Overview
+## Working Directory Overview
 
 ```
 data/
@@ -62,13 +62,13 @@ task_pipeline.py                      # experiment root file
 
 
 
-# Respective Model Reference
+## Respective Model Reference
 nanoGPT: [https://github.com/karpathy/nanoGPT](https://github.com/karpathy/nanoGPT)
 charDiffisusion: [https://colab.research.google.com/The_Annotated_Discrete_Diffusion_Models.ipynb](https://colab.research.google.com/github/ash80/diffusion-gpt/blob/master/The_Annotated_Discrete_Diffusion_Models.ipynb)
 Base Model Training Dataset: [OmniGEC](https://huggingface.co/datasets/lang-uk/Reddit-MultiGEC/blob/main/reddit_multi_gec.csv)
 Classification task: (SemEval-2019 Task 6: SubTask A)[https://aclanthology.org/N19-1144.pdf]
 
-# Experimental Step
+## Experimental Step
 __Steps__:
 1) place your corpus on misc/ naming "input.txt"
 	- they will generate the following files: input, train, val, meta.pkl
@@ -81,5 +81,5 @@ __Steps__:
    - e.g: python task_pipeline.py --epoch 50 --model_type dlm --test_set_type processed
    - kind look into its argument for more controlled experiment
 
-# Citation
+## Citation
 ```To Be Added```
