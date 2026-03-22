@@ -1,0 +1,8 @@
+training corpus: OmniGEC (only english; 1MB; https://aclanthology.org/2025.unlp-1.17.pdf; https://huggingface.co/datasets/lang-uk/Reddit-MultiGEC/blob/main/reddit_multi_gec.csv)
+length of dataset in characters: 1,188,765
+all the unique characters:
+ !"#$%&'()*+,-./0123456789:;=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_abcdefghijklmnopqrstuvwxyz|~
+vocab size: 169
+train has 1,069,888 tokens
+val has 118,877 tokens
+PS E:\Masters\UdS\Semester_1\CoLi\Final_Project_CoLi\code\misc> 

@@ -1,0 +1,25 @@
+[Epoch 1] Training Loss: 0.24436563982938728
+Validation - Accuracy: 0.5616 | Recall: 0.4938 | Precision: 0.4928 | F1 Score: 0.4896 | Loss: 0.1997691262513399
+[Epoch 2] Training Loss: 0.18709002357597151
+Validation - Accuracy: 0.5946 | Recall: 0.5083 | Precision: 0.5116 | F1 Score: 0.4959 | Loss: 0.18283933587372303
+[Epoch 3] Training Loss: 0.17504104304437837
+Validation - Accuracy: 0.6116 | Recall: 0.5110 | Precision: 0.5191 | F1 Score: 0.4879 | Loss: 0.17759313248097897
+[Epoch 4] Training Loss: 0.16998899759103855
+Validation - Accuracy: 0.6066 | Recall: 0.5065 | Precision: 0.5111 | F1 Score: 0.4833 | Loss: 0.17380530387163162
+[Epoch 5] Training Loss: 0.16727434269463023
+Validation - Accuracy: 0.6126 | Recall: 0.5099 | Precision: 0.5177 | F1 Score: 0.4845 | Loss: 0.17189865000545979
+[Epoch 6] Training Loss: 0.1653801528736949
+Validation - Accuracy: 0.6086 | Recall: 0.5035 | Precision: 0.5066 | F1 Score: 0.4750 | Loss: 0.1700113620609045
+[Epoch 7] Training Loss: 0.16412232692042986
+Validation - Accuracy: 0.6136 | Recall: 0.5022 | Precision: 0.5047 | F1 Score: 0.4662 | Loss: 0.16858561150729656
+[Epoch 8] Training Loss: 0.16310875381653508
+Validation - Accuracy: 0.6196 | Recall: 0.5056 | Precision: 0.5128 | F1 Score: 0.4667 | Loss: 0.16751356795430183
+[Epoch 9] Training Loss: 0.1623115666831533
+Validation - Accuracy: 0.6046 | Recall: 0.4933 | Precision: 0.4861 | F1 Score: 0.4561 | Loss: 0.1679855640977621
+[Epoch 10] Training Loss: 0.16174052081381282
+Validation - Accuracy: 0.6016 | Recall: 0.4904 | Precision: 0.4800 | F1 Score: 0.4528 | Loss: 0.16801858134567738
+Early stopping triggered
+[Done] Training Complete!
+[Done] Testing Complete!
+Test - Accuracy: 0.6717 | Recall: 0.5065 | Precision: 0.5119 | F1 Score: 0.4897
+[Done] Analysis Saved to outputs/mlm/base_result.tsv!
