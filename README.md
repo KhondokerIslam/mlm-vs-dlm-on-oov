@@ -1,5 +1,12 @@
 # Project Overview
-This repository contains the codes required to rerun the experiment "Tackling OOV: Masked Language Models vs Character Diffusion"
+This repository contains the codes required to rerun the experiment "Tackling OOV: Masked Language Models vs Character Diffusion".
+
+
+## Respective References
+- nanoGPT: [https://github.com/karpathy/nanoGPT](https://github.com/karpathy/nanoGPT)
+- charDiffisusion: [https://colab.research.google.com/The_Annotated_Discrete_Diffusion_Models.ipynb](https://colab.research.google.com/github/ash80/diffusion-gpt/blob/master/The_Annotated_Discrete_Diffusion_Models.ipynb)
+- Base Model Training Dataset: [OmniGEC](https://huggingface.co/datasets/lang-uk/Reddit-MultiGEC/blob/main/reddit_multi_gec.csv)
+- Classification task: [SemEval-2019 Task 6: SubTask A](https://aclanthology.org/N19-1144.pdf)
 
 ## Working Directory Overview
 
@@ -60,14 +67,6 @@ src/                                   # experiment relavent codes
 
 task_pipeline.py                      # experiment root file     
 ```
-
-
-
-## Respective Model Reference
-- nanoGPT: [https://github.com/karpathy/nanoGPT](https://github.com/karpathy/nanoGPT)
-- charDiffisusion: [https://colab.research.google.com/The_Annotated_Discrete_Diffusion_Models.ipynb](https://colab.research.google.com/github/ash80/diffusion-gpt/blob/master/The_Annotated_Discrete_Diffusion_Models.ipynb)
-- Base Model Training Dataset: [OmniGEC](https://huggingface.co/datasets/lang-uk/Reddit-MultiGEC/blob/main/reddit_multi_gec.csv)
-- Classification task: [SemEval-2019 Task 6: SubTask A](https://aclanthology.org/N19-1144.pdf)
 
 ## Experimental Step
 __Steps__:
