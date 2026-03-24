@@ -88,6 +88,9 @@ class Tokenization:
         self.test_file_path = test_file_path
         self.batch_size = batch_size
         self.max_length = max_length
+
+        self.label2id = {}
+        self.id2label = {}
     
 
     def load_pkl(self, dir):
@@ -117,13 +120,23 @@ class Tokenization:
         """
             Factory Method for Input Tokenization
         """
-        return self.tokenize_inputs(X.tolist()), torch.tensor(y)
+
+        X_enc = self.tokenize_inputs(X.tolist())
+        y_ids = [self.label2id[label] for label in y]
+        
+        return X_enc, torch.tensor(y_ids, dtype=torch.long)
     
     def tensor_conversion( self, X_encoding, y_encoding ):
         return TensorDataset(X_encoding['input_ids'], X_encoding['attention_mask'], y_encoding)
     
     def convert_to_dataloader( self, dataset ):
         return DataLoader(dataset, batch_size=self.batch_size, shuffle=True)
+    
+    def build_label_mapping(self, y):
+        unique_labels = sorted(set(y))  # ensures deterministic order
+        
+        self.label2id = {label: idx for idx, label in enumerate(unique_labels)}
+        self.id2label = {idx: label for label, idx in self.label2id.items()}
 
     
     def process_dataset( self ):
@@ -135,6 +148,9 @@ class Tokenization:
         dataset = Dataset()
         dataset.load_dataset( train_file_path=self.train_file_path, val_file_path=self.val_file_path, test_file_path=self.test_file_path )
         print( "[Done] Dataset Loaded!" )
+
+        # y_label encoding
+        self.build_label_mapping(dataset.y_train)
 
         # Tokenizes Texts and Labels
         train_encodings, y_train_tensor = self.encode( dataset.X_train, dataset.y_train )

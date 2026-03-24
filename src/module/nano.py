@@ -19,7 +19,7 @@ class Classifier(nn.Module):
         super().__init__()
 
         # loading trained base nanoGPT
-        self.model_path = "../nanoGPT_CoLi/out-reddit-clean/ckpt.pt"
+        self.model_path = "nanoGPT_CoLi/out-reddit-clean/ckpt.pt"
         checkpoint = torch.load(self.model_path, map_location="cpu")
 
         # loading models configuration
