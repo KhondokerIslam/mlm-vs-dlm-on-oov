@@ -71,6 +71,8 @@ def main():
 
     # Device mapping
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    # device = "cpu" if args.model_type == "mlm" else device
+    device = "cpu"
     print( f"[Notification] Detected Device: {device}" )
 
     # Defining Model
