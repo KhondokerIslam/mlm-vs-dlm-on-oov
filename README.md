@@ -1,6 +1,14 @@
 # Project Overview
 This repository contains the codes required to rerun the experiment "Tackling OOV: Masked Language Models vs Character Diffusion".
 
+## Abstract
+LLMs have demonstrated remarkable success; their persistent limitation remains in their ability to generalize effectively in the presence of noisy or out-of-vocabulary (OOV) domains. In this project, I explore the Character Diffusion Model (DLM) as an alternative due to its iterative corrupt-and-reconstruct-sequences strategy in a controlled experiment on the OLID task. Recall and precision in Table 1 (t.b.a) indicate that DLM demonstrates a better understanding across both labels, along with the highest F1-score for OOV-prevalent _Offensive_ classification.
+
+Detailed report to be available soon.
+
+## Result
+t.b.a
+
 
 ## Respective References
 - nanoGPT: [https://github.com/karpathy/nanoGPT](https://github.com/karpathy/nanoGPT)
